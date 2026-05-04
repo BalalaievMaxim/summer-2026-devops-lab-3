@@ -1,0 +1,46 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: mywebapp_db
+    environment:
+      POSTGRES_DB: mywebappdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - mywebapp_network
+    restart: unless-stopped
+
+  web:
+    build: 
+      context: ./src/mywebapp
+      dockerfile: Dockerfile
+    container_name: mywebapp_web
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=db;Database=mywebappdb;Username=postgres;Password=postgres
+    depends_on:
+      - db
+    networks:
+      - mywebapp_network
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    container_name: mywebapp_nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - web
+    networks:
+      - mywebapp_network
+    restart: unless-stopped
+
+networks:
+  mywebapp_network:
+    driver: bridge
+
+volumes:
+  pgdata:
