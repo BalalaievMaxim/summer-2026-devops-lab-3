@@ -11,8 +11,11 @@ builder.Configuration.AddJsonFile("/etc/mywebapp/config.json", optional: true, r
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
                        ?? "Host=127.0.0.1;Database=mywebappdb;Username=postgres;Password=postgres";
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(connectionString));
+if (!builder.Environment.IsEnvironment("Testing"))
+{
+    builder.Services.AddDbContext<AppDbContext>(options =>
+        options.UseNpgsql(connectionString));
+}
 
 builder.WebHost.ConfigureKestrel(options =>
 {
@@ -27,7 +30,13 @@ app.MapNotesEndpoints();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate();
+    
+    if (db.Database.IsRelational())
+    {
+        db.Database.Migrate();
+    }
 }
 
 app.Run();
+
+public partial class Program { }
