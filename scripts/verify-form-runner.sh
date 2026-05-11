@@ -12,11 +12,24 @@ EXIT_CODE=0
 echo "=== Starting verification of deployment on $TARGET_IP ==="
 
 echo "Checking service availability..."
-STATUS_ROOT=$(curl -o /dev/null -s -w "%{http_code}" http://$TARGET_IP/)
-if [ "$STATUS_ROOT" -eq 200 ]; then
-    echo "✅ Main page is available (HTTP 200)."
-else
-    echo "❌ Error: Main page returned status $STATUS_ROOT."
+MAX_RETRIES=5
+RETRY_COUNT=0
+STATUS_ROOT=000
+
+while [ "$STATUS_ROOT" -ne 200 ] && [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+    RETRY_COUNT=$((RETRY_COUNT + 1))
+    STATUS_ROOT=$(curl -o /dev/null -s -w "%{http_code}" --connect-timeout 5 http://$TARGET_IP/)
+    
+    if [ "$STATUS_ROOT" -eq 200 ]; then
+        echo "✅ Main page is available (HTTP 200) after $RETRY_COUNT attempt(s)."
+    else
+        echo "⏳ Attempt $RETRY_COUNT/$MAX_RETRIES: Main page returned $STATUS_ROOT. Retrying in 5s..."
+        sleep 5
+    fi
+done
+
+if [ "$STATUS_ROOT" -ne 200 ]; then
+    echo "❌ Error: Main page failed to return 200 after $MAX_RETRIES attempts."
     EXIT_CODE=1
 fi
 
