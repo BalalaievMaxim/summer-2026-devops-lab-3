@@ -5,8 +5,7 @@ echo "=== Starting Target Node Setup ==="
 
 echo "Updating packages..."
 sudo apt-get update -y
-sudo apt-get upgrade -y
-sudo apt-get install -y ca-certificates curl gnupg ufw
+sudo apt-get install -y ca-certificates curl gnupg ufw openssh-server
 
 echo "Installing Docker and Docker Compose..."
 curl -fsSL https://get.docker.com -o get-docker.sh

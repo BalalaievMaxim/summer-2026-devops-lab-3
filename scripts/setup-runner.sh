@@ -5,7 +5,6 @@ echo "=== Starting GitHub Actions Self-Hosted Runner Setup ==="
 
 echo "Updating packages..."
 sudo apt-get update -y
-sudo apt-get upgrade -y
 sudo apt-get install -y curl tar perl jq
 
 echo "Creating directory ~/actions-runner..."
