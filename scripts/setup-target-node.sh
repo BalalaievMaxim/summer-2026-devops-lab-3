@@ -47,6 +47,11 @@ sudo ufw allow OpenSSH
 sudo ufw allow 80/tcp
 sudo ufw --force enable
 
+echo "Configuring paswordless sudo for service management..."
+SUDOERS_FILE="/etc/sudoers.d/mywebapp"
+echo "$USER ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart mywebapp.service" | sudo tee $SUDOERS_FILE > /dev/null
+sudo chmod 0440 $SUDOERS_FILE
+
 echo ""
 echo "=========================================================================================="
 echo "✅ Stage of automatic preparation completed!"
