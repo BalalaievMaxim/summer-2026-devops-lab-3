@@ -5,6 +5,7 @@ echo "=== Starting GitHub Actions Self-Hosted Runner Setup ==="
 
 echo "Updating packages..."
 sudo apt-get update -y
+sudo apt-get upgrade -y
 sudo apt-get install -y curl tar perl jq
 
 echo "Creating directory ~/actions-runner..."
@@ -20,7 +21,7 @@ echo "048024cd2c848eb6f14d5646d56c13a4def2ae7ee3ad12122bee960c56f3d271  actions-
 echo "Extracting files..."
 tar xzf ./actions-runner-linux-x64-2.334.0.tar.gz
 
-echo "Installing dependencies (.NET Core and others)..."
+echo "Installing dependencies..."
 sudo ./bin/installdependencies.sh
 
 echo "Checking SSH keys for deployment..."
