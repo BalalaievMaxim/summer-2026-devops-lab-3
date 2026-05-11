@@ -98,11 +98,11 @@ jobs:
 
       - name: Copy configuration to Target Node
         run: |
-          scp -o StrictHostKeyChecking=no nginx.conf docker-compose.yaml ${{ secrets.TARGET_NODE_IP }}:/opt/mywebapp/
+          scp -o StrictHostKeyChecking=no nginx.conf docker-compose.yaml ${{ secrets.TARGET_NODE_USER }}@${{ secrets.TARGET_NODE_IP }}:/opt/mywebapp/
 
       - name: Pull latest images and restart service
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.TARGET_NODE_IP }} "
+          ssh -o StrictHostKeyChecking=no ${{ secrets.TARGET_NODE_USER }}@${{ secrets.TARGET_NODE_IP }} "
             cd /opt/mywebapp && \
             docker compose pull && \
             sudo systemctl restart mywebapp.service
