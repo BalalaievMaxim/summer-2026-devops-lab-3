@@ -13,9 +13,7 @@ services:
     restart: unless-stopped
 
   web:
-    build: 
-      context: ./src/mywebapp
-      dockerfile: Dockerfile
+    image: ghcr.io/BalalaievMaxim/summer-2026-devops-lab-3:latest
     container_name: mywebapp_web
     environment:
       - ConnectionStrings__DefaultConnection=Host=db;Database=mywebappdb;Username=postgres;Password=postgres

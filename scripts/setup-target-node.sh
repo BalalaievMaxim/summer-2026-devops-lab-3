@@ -32,6 +32,7 @@ After=docker.service
 [Service]
 Type=simple
 WorkingDirectory=$APP_DIR
+ExecStartPre=/usr/bin/docker compose pull
 ExecStart=/usr/bin/docker compose up
 ExecStop=/usr/bin/docker compose down
 Restart=always
