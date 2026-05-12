@@ -43,7 +43,7 @@ jobs:
           /p:Threshold=40
 
       - name: Upload coverage report
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
         uses: actions/upload-artifact@v4
         with:
           name: code-coverage-report
