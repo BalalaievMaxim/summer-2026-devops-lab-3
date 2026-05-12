@@ -1,11 +1,12 @@
+---
 name: Lab 3 CI/CD
 
 on:
   push:
-    branches: [ "main" ]
-    tags: [ "*" ]
+    branches: ["main"]
+    tags: ["*"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   lint:
@@ -31,7 +32,8 @@ jobs:
       - name: Lint YAML files
         run: |
           sudo apt-get install yamllint
-          yamllint docker-compose.yaml .github/workflows/ || echo "Yaml linting failed, check configuration"
+          yamllint docker-compose.yaml .github/workflows/ || \
+          echo "Yaml linting failed, check configuration"
 
       - name: Run tests with coverage
         run: |
@@ -98,11 +100,14 @@ jobs:
 
       - name: Copy configuration to Target Node
         run: |
-          scp -o StrictHostKeyChecking=no nginx.conf docker-compose.yaml ${{ secrets.TARGET_NODE_USER }}@${{ secrets.TARGET_NODE_IP }}:/opt/mywebapp/
+          scp -o StrictHostKeyChecking=no nginx.conf \
+          docker-compose.yaml \
+          ${{secrets.TARGET_NODE_USER}}@${{secrets.TARGET_NODE_IP}}:/opt/mywebapp/
 
       - name: Pull latest images and restart service
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.TARGET_NODE_USER }}@${{ secrets.TARGET_NODE_IP }} "
+          ssh -o StrictHostKeyChecking=no \
+          ${{secrets.TARGET_NODE_USER}}@${{secrets.TARGET_NODE_IP}} "
             cd /opt/mywebapp && \
             docker compose pull && \
             sudo systemctl restart mywebapp.service
